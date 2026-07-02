@@ -24,7 +24,7 @@ export default function MessageList() {
   } = useChat();
 
   return (
-    <main className="flex-1 overflow-y-auto p-4 space-y-4">
+    <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4">
       {messages.length === 0 ? (
         <div className="h-full flex flex-col items-center justify-center text-center p-6">
           <div className="w-16 h-16 bg-indigo-50 dark:bg-indigo-950/30 rounded-2xl flex items-center justify-center text-indigo-500 dark:text-indigo-400 mb-4 animate-bounce">
@@ -45,7 +45,7 @@ export default function MessageList() {
           return (
             <div
               key={msg.id}
-              className={`group relative flex flex-col max-w-[85%] sm:max-w-[70%] ${
+              className={`group relative flex flex-col max-w-[85%] sm:max-w-[70%] p-0.5 ${
                 isMe ? "ml-auto items-end" : "mr-auto items-start"
               }`}
             >
