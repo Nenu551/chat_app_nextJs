@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 
-export default function DisplayNameModal({ isOpen, onSave }) {
+export default function DisplayNameModal({ isOpen, onSave, onClose }) {
   const [nameInput, setNameInput] = useState("");
   const [mounted, setMounted] = useState(false);
 
@@ -28,9 +28,29 @@ export default function DisplayNameModal({ isOpen, onSave }) {
     onSave(guestName);
   };
 
+  const handleCloseClick = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      handleSkip();
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-md p-6 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl shadow-2xl transform transition-all duration-300 scale-100 flex flex-col gap-5">
+      <div className="w-full max-w-md p-6 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl shadow-2xl transform transition-all duration-300 scale-100 flex flex-col gap-5 relative">
+        {/* Close Button */}
+        <button
+          type="button"
+          onClick={handleCloseClick}
+          className="absolute top-4 right-4 p-1.5 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 transition cursor-pointer"
+          aria-label="Close modal"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 mb-3">
             <svg

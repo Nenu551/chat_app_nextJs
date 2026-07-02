@@ -16,6 +16,9 @@
             "timestamp": {
               ".validate": "newData.isNumber()"
             },
+            "edited": {
+              ".validate": "newData.isBoolean()"
+            },
             "$other": {
               ".validate": false
             }
