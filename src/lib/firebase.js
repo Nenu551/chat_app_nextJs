@@ -13,6 +13,12 @@ const firebaseConfig = {
 
 let db = null;
 
+console.log("Firebase Config Keys loaded:", {
+  apiKey: firebaseConfig.apiKey,
+  databaseURL: firebaseConfig.databaseURL,
+  projectId: firebaseConfig.projectId,
+});
+
 // Initialize Firebase only if API key is provided
 if (firebaseConfig.apiKey) {
   try {

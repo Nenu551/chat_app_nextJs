@@ -24,6 +24,14 @@
             }
           }
         },
+        "presence": {
+          ".read": "true",
+          ".write": "true"
+        },
+        "typing": {
+          ".read": "true",
+          ".write": "true"
+        },
         "$other": {
           ".validate": false
         }

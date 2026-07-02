@@ -84,6 +84,7 @@ export default function Home() {
                 onChange={(e) => setRoomInput(e.target.value)}
                 className="w-full pl-7 pr-4 py-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-950 dark:text-zinc-50 placeholder-zinc-400 dark:placeholder-zinc-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition text-sm"
                 required
+                suppressHydrationWarning={true}
               />
             </div>
           </div>
