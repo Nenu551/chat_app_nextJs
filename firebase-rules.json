@@ -19,6 +19,10 @@
             "edited": {
               ".validate": "newData.isBoolean()"
             },
+            "reactions": {
+              ".read": "true",
+              ".write": "true"
+            },
             "$other": {
               ".validate": false
             }

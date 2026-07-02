@@ -359,6 +359,16 @@ export function ChatProvider({ roomId, children }) {
     if (!db || !roomId || !displayName) return;
     
     const message = messages.find((m) => m.id === msgId);
+    
+    // Clear any other reactions from this user on this message
+    if (message?.reactions) {
+      Object.keys(message.reactions).forEach((exEmoji) => {
+        if (exEmoji !== emoji && message.reactions[exEmoji]?.[myUserId]) {
+          remove(ref(db, `rooms/${roomId}/messages/${msgId}/reactions/${exEmoji}/${myUserId}`));
+        }
+      });
+    }
+
     const hasReacted = message?.reactions?.[emoji]?.[myUserId];
     
     const reactionRef = ref(

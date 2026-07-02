@@ -41,162 +41,103 @@ export default function MessageList() {
         messages.map((msg) => {
           const isMe = msg.sender === displayName;
           const isEditing = editingMessageId === msg.id;
-          
+
           return (
             <div
               key={msg.id}
-              className={`group relative flex flex-col max-w-[85%] sm:max-w-[70%] p-0.5 ${
-                isMe ? "ml-auto items-end" : "mr-auto items-start"
-              }`}
+              className={`group relative flex flex-col max-w-[85%] sm:max-w-[70%] p-0.5 ${isMe ? "ml-auto items-end" : "mr-auto items-start"
+                }`}
             >
               <div className="flex items-baseline gap-2 mb-0.5">
                 <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400">
                   {isMe ? "You" : msg.sender}
                 </span>
               </div>
-              
+
               {/* Bubble Wrapper */}
               <div className="relative flex items-center w-full gap-2">
-                
+
                 {/* Message Bubble Container */}
                 <div
-                  className={`flex flex-col w-full relative ${
-                    isMe ? "items-end" : "items-start"
-                  }`}
+                  className={`flex flex-col w-full relative ${isMe ? "items-end" : "items-start"
+                    }`}
                 >
-                  {isEditing ? (
-                    // Inline edit form
-                    <div className="w-full flex flex-col gap-1.5 p-2 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl min-w-[200px] sm:min-w-[280px]">
-                      <textarea
-                        value={editText}
-                        onChange={(e) => setEditText(e.target.value)}
-                        maxLength={2000}
-                        rows={2}
-                        className="w-full text-sm bg-transparent outline-none resize-none border-none p-1.5 text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 font-sans"
-                      />
-                      <div className="flex justify-end gap-1.5">
-                        <button
-                          type="button"
-                          onClick={() => setEditingMessageId(null)}
-                          className="px-2.5 py-1 text-[11px] font-semibold text-zinc-650 dark:text-zinc-400 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 rounded-lg cursor-pointer"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleSaveEdit(msg.id)}
-                          className="px-2.5 py-1 text-[11px] font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg cursor-pointer"
-                        >
-                          Save
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    // Standard message bubble rendering
-                    <div
-                      className={`relative px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm break-words max-w-full ${
-                        isMe
-                          ? "bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-tr-none"
-                          : "bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 text-zinc-900 dark:text-zinc-100 rounded-tl-none"
+                  {/* Standard message bubble rendering */}
+                  <div
+                    className={`relative px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm break-words max-w-full ${isMe
+                      ? "bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-tr-none"
+                      : "bg-white dark:bg-zinc-900 border border-zinc-200/50 dark:border-zinc-800/50 text-zinc-900 dark:text-zinc-100 rounded-tl-none"
                       }`}
-                    >
-                      {/* Actions overlay pill (React, Edit, and Delete) */}
-                      <div
-                        className={`flex items-center gap-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 py-0.5 px-1 rounded-xl shadow-md z-25 absolute -top-3.5 transition-opacity duration-200 opacity-100 md:opacity-0 md:group-hover:opacity-100 ${
-                          isMe ? "-left-3" : "-right-3"
+                  >
+                    {/* Actions overlay pill (React and Delete) */}
+                    <div
+                      className={`flex items-center gap-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 py-0.5 px-1 rounded-xl shadow-md z-25 absolute -top-3.5 transition-opacity duration-200 opacity-100 md:opacity-0 md:group-hover:opacity-100 ${isMe ? "-left-3" : "-right-3"
                         }`}
+                    >
+                      {/* React Emoji Button */}
+                      <button
+                        type="button"
+                        onClick={() => setActivePickerId(activePickerId === msg.id ? null : msg.id)}
+                        className="p-1 text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded transition cursor-pointer picker-trigger text-xs"
+                        title="React"
                       >
-                        {/* React Emoji Button */}
-                        <button
-                          type="button"
-                          onClick={() => setActivePickerId(activePickerId === msg.id ? null : msg.id)}
-                          className="p-1 text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded transition cursor-pointer picker-trigger text-xs"
-                          title="React"
-                        >
-                          😀
-                        </button>
-                        
-                        {/* Edit Button */}
-                        <button
-                          type="button"
-                          onClick={() => handleStartEdit(msg.id, msg.text)}
-                          className="p-1 text-zinc-500 hover:text-indigo-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded transition cursor-pointer"
-                          title="Edit Message"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
-                          </svg>
-                        </button>
-                        
-                        {/* Delete Button */}
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteMessage(msg.id)}
-                          className="p-1 text-zinc-500 hover:text-red-650 hover:bg-red-100 dark:hover:bg-red-950/30 rounded transition cursor-pointer"
-                          title="Delete Message"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.34 9m-4.78 0L9 9m4.78-3L12 2.5 9.22 6M3.75 6.125h16.5M4.5 6.125l1 13.5a2.25 2.25 0 0 0 2.25 2.25h8.5a2.25 2.25 0 0 0 2.25-2.25l1-13.5" />
-                          </svg>
-                        </button>
+                        😀
+                      </button>
 
-                        {/* Small Reaction Box overlay */}
-                        {activePickerId === msg.id && (
-                          <div
-                            className={`picker-box absolute top-7 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-1 rounded-full shadow-lg flex gap-1 z-30 ${
-                              isMe ? "left-0" : "right-0"
+                      {/* Small Reaction Box overlay */}
+                      {activePickerId === msg.id && (
+                        <div
+                          className={`picker-box absolute top-7 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-1 rounded-full shadow-lg flex gap-1 z-30 ${isMe ? "left-0" : "right-0"
                             }`}
-                          >
-                            {["👍", "❤️", "😂", "🔥"].map((emoji) => (
-                              <button
-                                type="button"
-                                key={emoji}
-                                onClick={() => toggleReaction(msg.id, emoji)}
-                                className="w-6 h-6 flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition text-sm cursor-pointer select-none"
-                              >
-                                {emoji}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      <p
-                        className="break-words max-w-full font-sans"
-                        dangerouslySetInnerHTML={formatMessageText(msg.text)}
-                      />
-                      
-                      {/* Display reaction badges */}
-                      {msg.reactions && (
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {Object.entries(msg.reactions).map(([emoji, users]) => {
-                            const reactionUsers = Object.values(users);
-                            const count = reactionUsers.length;
-                            if (count === 0) return null;
-                            
-                            const hasReacted = !!users[myUserId];
-                            const reactorNames = reactionUsers.join(", ");
-                            
-                            return (
-                              <button
-                                type="button"
-                                key={emoji}
-                                onClick={() => toggleReaction(msg.id, emoji)}
-                                className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-semibold border cursor-pointer select-none transition ${
-                                  hasReacted
-                                    ? "bg-indigo-50 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-850 text-indigo-700 dark:text-indigo-300"
-                                    : "bg-zinc-50 border-zinc-200 text-zinc-600 hover:bg-zinc-100 dark:bg-zinc-850 dark:border-zinc-800/50 dark:text-zinc-400 dark:hover:bg-zinc-800"
-                                }`}
-                                title={reactorNames}
-                              >
-                                <span>{emoji}</span>
-                                <span className="text-[10px]">{count}</span>
-                              </button>
-                            );
-                          })}
+                        >
+                          {["👍", "❤️", "😂", "🔥"].map((emoji) => (
+                            <button
+                              type="button"
+                              key={emoji}
+                              onClick={() => toggleReaction(msg.id, emoji)}
+                              className="w-6 h-6 flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition text-sm cursor-pointer select-none"
+                            >
+                              {emoji}
+                            </button>
+                          ))}
                         </div>
                       )}
                     </div>
-                  )}
+                    <p
+                      className="break-words max-w-full font-sans"
+                      dangerouslySetInnerHTML={formatMessageText(msg.text)}
+                    />
+
+                    {/* Display reaction badges */}
+                    {msg.reactions && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {Object.entries(msg.reactions).map(([emoji, users]) => {
+                          const reactionUsers = Object.values(users);
+                          const count = reactionUsers.length;
+                          if (count === 0) return null;
+
+                          const hasReacted = !!users[myUserId];
+                          const reactorNames = reactionUsers.join(", ");
+
+                          return (
+                            <button
+                              type="button"
+                              key={emoji}
+                              onClick={() => toggleReaction(msg.id, emoji)}
+                              className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-semibold border cursor-pointer select-none transition ${hasReacted
+                                ? "bg-indigo-50 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-850 text-indigo-700 dark:text-indigo-300"
+                                : "bg-zinc-50 border-zinc-200 text-zinc-600 hover:bg-zinc-100 dark:bg-zinc-850 dark:border-zinc-800/50 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                                }`}
+                              title={reactorNames}
+                            >
+                              <span>{emoji}</span>
+                              <span className="text-[10px]">{count}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
