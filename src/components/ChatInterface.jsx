@@ -13,6 +13,7 @@ export default function ChatInterface({ roomId }) {
   const [isConnected, setIsConnected] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [theme, setTheme] = useState("light");
 
   const messagesEndRef = useRef(null);
   const isInitialScrollRef = useRef(true);
@@ -27,7 +28,29 @@ export default function ChatInterface({ roomId }) {
     } else {
       setShowNameModal(true);
     }
+
+    // Initialize Theme
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.classList.remove("light", "dark");
+      document.documentElement.classList.add(savedTheme);
+    } else {
+      const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const initialTheme = systemDark ? "dark" : "light";
+      setTheme(initialTheme);
+      document.documentElement.classList.remove("light", "dark");
+      document.documentElement.classList.add(initialTheme);
+    }
   }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.remove("light", "dark");
+    document.documentElement.classList.add(newTheme);
+  };
 
   // Firebase Realtime DB subscriptions
   useEffect(() => {
@@ -156,7 +179,7 @@ export default function ChatInterface({ roomId }) {
   }
 
   return (
-    <div className="flex flex-col flex-1 h-screen bg-zinc-50 dark:bg-zinc-950 overflow-hidden font-sans">
+    <div className="flex flex-col flex-1 h-full bg-zinc-50 dark:bg-zinc-950 overflow-hidden font-sans">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200/50 dark:border-zinc-800/50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -188,6 +211,26 @@ export default function ChatInterface({ roomId }) {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Light / Dark Mode Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="p-1.5 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition cursor-pointer"
+            title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label="Toggle dark mode"
+          >
+            {theme === "dark" ? (
+              // Sun Icon
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m0 13.5V21M5.22 5.22l1.59 1.59m10.38 10.38 1.59 1.59M3 12h2.25m13.5 0H21M5.22 18.78l1.59-1.59m10.38-10.38 1.59-1.59M12 7.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z" />
+              </svg>
+            ) : (
+              // Moon Icon
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+              </svg>
+            )}
+          </button>
+
           {/* Change Display Name button */}
           <button
             onClick={() => setShowNameModal(true)}
